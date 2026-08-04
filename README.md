@@ -4,6 +4,23 @@ BodyLink 是一个面向 Windows 和 VRChat 的本地摄像头全身追踪工具
 
 默认使用腰部和双脚三个追踪点。VRChat 官方文档明确指出，摄像头这类有遮挡和深度误差的追踪源通常在少量追踪点下更稳定；八点模式包含胸、双膝和双肘，适合光线与机位稳定后再尝试。
 
+## 推荐配置
+
+| 项目 | 推荐配置 |
+| --- | --- |
+| 操作系统 | 64 位 Windows 10 1809 或 Windows 11 |
+| 显卡 | NVIDIA GeForce RTX 4060 8 GB 或更高，驱动支持 CUDA 13 |
+| 处理器 | Intel Core i5-12400、AMD Ryzen 5 5600 或更高的 6 核处理器 |
+| 内存 | 16 GB 或更多 |
+| 摄像头 | 支持 MJPEG 的 720p/30 FPS 或 1080p/30 FPS RGB 摄像头，水平视场角约 60 至 78 度 |
+| USB | 摄像头直连 USB 3.0 接口，避免与高带宽设备共用低速集线器 |
+| 使用环境 | 均匀的正面照明、与衣着有明显对比的背景，以及能让全身完整入镜的空间 |
+| 可选 VR 设备 | Pico 4 Ultra、PICO Connect 与 SteamVR，用于头部和双手辅助对齐 |
+
+日常使用优先选择 `1280 x 720 / 30 FPS / MJPEG`，通常能兼顾追踪稳定性、延迟和 USB 带宽。人物离摄像头较远、在画面中占比较小时可改用 1080p/30 FPS，以改善人体检测和裁剪质量；姿态模型输入仍固定为 384 x 288。只有在摄像头、USB 链路和 GPU 都能持续处理时，60 FPS 才可能降低动作延迟，并非设置得越高就一定越准确。
+
+当前版本在 RTX 5070 Ti 开发机上完成验证。RTX 4060 级别是依据现有 CUDA 推理负载给出的保守推荐目标，不代表所有同级设备均已完成实机基准测试，也不作为最低配置承诺。
+
 ## 安装
 
 要求：64 位 Windows 10 1809 或更新版本、普通摄像头、PC 版 VRChat，以及支持 CUDA 13 的 NVIDIA 显卡驱动。当前开发机为 RTX 5070 Ti、驱动 610.74。Pico 辅助模式还需要 PICO Connect 和 SteamVR；没有头显时仍可使用纯摄像头模式。
@@ -118,6 +135,10 @@ RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；�
 - [OpenMMLab RTMPose3D](https://github.com/open-mmlab/mmpose/tree/main/projects/rtmpose3d)
 - [rtmlib](https://github.com/Tau-J/rtmlib)
 - [ONNX Runtime CUDA Execution Provider](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html)
+
+## 支持项目
+
+如果 BodyLink 对你有帮助，可以通过 [爱发电支持 BodyLink](https://ifdian.net/a/mouren0421)。赞助不会改变 BodyLink 的开源授权，也不会影响免费功能的提供。
 
 ## 许可证
 
