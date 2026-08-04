@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gc
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,7 +15,12 @@ if TYPE_CHECKING:
     from bodylink.geometry import CameraIntrinsics
 
 
-MODEL_DIRECTORY = Path(__file__).resolve().parents[1] / "models"
+MODEL_DIRECTORY = Path(
+    os.environ.get(
+        "BODYLINK_MODEL_DIR",
+        Path(__file__).resolve().parents[1] / "models",
+    )
+).resolve()
 RTMW3D_MODEL_PATH = (
     MODEL_DIRECTORY / "rtmw3d-x_8xb64_cocktail14-384x288-b0a0eab7.onnx"
 )

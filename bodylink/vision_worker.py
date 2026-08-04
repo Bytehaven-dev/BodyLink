@@ -34,11 +34,11 @@ from bodylink.geometry import (
 )
 from bodylink.osc_sender import VRChatOscSender
 from bodylink.pose import Landmark, POSE_CONNECTIONS, PoseSnapshot
-from bodylink.rtmw3d import Rtmw3dTracker, missing_model_paths
+from bodylink.rtmw3d import MODEL_DIRECTORY, Rtmw3dTracker, missing_model_paths
 from bodylink.vr_runtime import OpenVrPoseProvider, VrPoseSnapshot
 
 
-FACE_MODEL_PATH = Path(__file__).resolve().parents[1] / "models" / "face_landmarker.task"
+FACE_MODEL_PATH = MODEL_DIRECTORY / "face_landmarker.task"
 CALIBRATION_SAMPLE_COUNT = 24
 FACE_LOSS_TIMEOUT_S = 0.50
 CAPTURE_FOURCC = {"mjpg": "MJPG", "yuy2": "YUY2"}

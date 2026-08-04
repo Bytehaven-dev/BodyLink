@@ -34,6 +34,10 @@ FACE_MODEL_URL = (
 )
 MIN_FACE_MODEL_BYTES = 3_000_000
 MIN_DETECTOR_MODEL_BYTES = 50_000_000
+FACE_MODEL_BYTES = 3_758_596
+FACE_MODEL_SHA256 = "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+DETECTOR_MODEL_BYTES = 101_400_344
+DETECTOR_MODEL_SHA256 = "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23"
 
 
 def models_directory() -> Path:
@@ -174,7 +178,12 @@ def download_model(destination: Path | None = None) -> Path:
 
 def download_detector_model(destination: Path | None = None) -> Path:
     target = destination or detector_model_path()
-    if _ready(target, minimum_bytes=MIN_DETECTOR_MODEL_BYTES):
+    if _ready(
+        target,
+        minimum_bytes=MIN_DETECTOR_MODEL_BYTES,
+        expected_bytes=DETECTOR_MODEL_BYTES,
+        expected_sha256=DETECTOR_MODEL_SHA256,
+    ):
         print(f"Person detector ready: {target}")
         return target
 
@@ -197,8 +206,13 @@ def download_detector_model(destination: Path | None = None) -> Path:
                 raise RuntimeError("person detector archive has unexpected contents")
             with package.open(candidates[0]) as source, partial.open("wb") as out:
                 shutil.copyfileobj(source, out, length=1024 * 1024)
-        if partial.stat().st_size < MIN_DETECTOR_MODEL_BYTES:
-            raise RuntimeError("extracted person detector is unexpectedly small")
+        if not _ready(
+            partial,
+            minimum_bytes=MIN_DETECTOR_MODEL_BYTES,
+            expected_bytes=DETECTOR_MODEL_BYTES,
+            expected_sha256=DETECTOR_MODEL_SHA256,
+        ):
+            raise RuntimeError("extracted person detector failed verification")
         os.replace(partial, target)
     finally:
         partial.unlink(missing_ok=True)
@@ -213,6 +227,8 @@ def download_face_model(destination: Path | None = None) -> Path:
         destination or face_model_path(),
         "MediaPipe face model",
         minimum_bytes=MIN_FACE_MODEL_BYTES,
+        expected_bytes=FACE_MODEL_BYTES,
+        expected_sha256=FACE_MODEL_SHA256,
     )
 
 

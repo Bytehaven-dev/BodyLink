@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 import sys
-
-from PySide6.QtCore import QLockFile, QStandardPaths, Qt
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QMessageBox
-
-from bodylink.config import load_config
-from bodylink.ui import MainWindow, load_application_fonts
+from pathlib import Path
 
 
 def main() -> int:
+    if len(sys.argv) == 3 and sys.argv[1] == "--runtime-report":
+        from bodylink.diagnostics import write_runtime_report
+
+        return write_runtime_report(Path(sys.argv[2]))
+
+    from PySide6.QtCore import QLockFile, QStandardPaths, Qt
+    from PySide6.QtGui import QFont
+    from PySide6.QtWidgets import QApplication, QMessageBox
+
+    from bodylink.config import load_config
+    from bodylink.ui import MainWindow, load_application_fonts
+
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )

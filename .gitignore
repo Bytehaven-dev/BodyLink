@@ -14,7 +14,9 @@ models/*.zip
 models/*.part
 build/
 dist/
+release/
 *.spec
+!packaging/*.spec
 *.log
 Thumbs.db
 .DS_Store
