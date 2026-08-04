@@ -8,6 +8,7 @@ SITE_PACKAGES = PROJECT_ROOT / ".venv" / "Lib" / "site-packages"
 BUILD_DIR = PROJECT_ROOT / "build"
 
 datas = [
+    (str(PROJECT_ROOT / "LICENSE"), "."),
     (str(PROJECT_ROOT / "README.md"), "."),
     (str(PROJECT_ROOT / "CHANGELOG.md"), "."),
     (str(PROJECT_ROOT / "ROADMAP.md"), "."),

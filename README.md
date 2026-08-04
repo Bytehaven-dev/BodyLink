@@ -118,3 +118,9 @@ RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；�
 - [OpenMMLab RTMPose3D](https://github.com/open-mmlab/mmpose/tree/main/projects/rtmpose3d)
 - [rtmlib](https://github.com/Tau-J/rtmlib)
 - [ONNX Runtime CUDA Execution Provider](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html)
+
+## 许可证
+
+BodyLink 自有源代码采用 [Apache License 2.0](LICENSE) 授权，Copyright 2026 Bytehaven-dev。该协议允许个人和商业使用、修改与再发布，并包含明确的专利授权和免责声明。
+
+随项目分发的第三方组件与模型不因此改变授权，仍分别遵循 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 中列出的许可证和使用条款。
