@@ -1,0 +1,16 @@
+version:
+  file: VERSION
+
+changelog:
+  files:
+    - path: CHANGELOG.md
+      lang: en
+    - path: CHANGELOG.zh.md
+      lang: zh
+
+commit:
+  message: "chore: 发布 v{version}"
+
+tag:
+  prefix: v
+  sign: false

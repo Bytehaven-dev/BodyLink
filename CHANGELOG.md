@@ -1,5 +1,7 @@
 # Changelog
 
+English | [简体中文](CHANGELOG.zh.md)
+
 ## 0.3.0 - 2026-08-05
 
 ### Features
