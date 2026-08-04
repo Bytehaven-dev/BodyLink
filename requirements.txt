@@ -1,0 +1,9 @@
+mediapipe==0.10.35
+numpy==2.2.6
+onnxruntime-gpu[cuda,cudnn]==1.28.0
+openvr==2.12.1401
+opencv-contrib-python==4.12.0.88
+PySide6==6.11.1
+pygrabber==0.2
+python-osc==1.10.2
+tqdm==4.67.1
