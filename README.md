@@ -6,12 +6,24 @@ BodyLink 是一个面向 Windows 和 VRChat 的本地摄像头全身追踪工具
 
 ## 安装
 
-要求：Windows 10/11、Python 3.12、普通摄像头、PC 版 VRChat，以及支持 CUDA 13 的 NVIDIA 显卡驱动。当前开发机为 RTX 5070 Ti、驱动 610.74。Pico 辅助模式还需要 PICO Connect 和 SteamVR；没有头显时仍可使用纯摄像头模式。
+要求：64 位 Windows 10 1809 或更新版本、普通摄像头、PC 版 VRChat，以及支持 CUDA 13 的 NVIDIA 显卡驱动。当前开发机为 RTX 5070 Ti、驱动 610.74。Pico 辅助模式还需要 PICO Connect 和 SteamVR；没有头显时仍可使用纯摄像头模式。
 
-1. 双击 `install.bat`。它会创建独立的 `.venv`，安装 ONNX Runtime CUDA、CUDA/cuDNN 运行库与固定版本依赖，并下载 RTMW3D-X、YOLOX 人体检测和 MediaPipe 面捕模型。首次安装需要下载约 1.8 GB，解压后占用会更大。
+### 安装包（推荐）
+
+1. 从 [GitHub Releases](https://github.com/Bytehaven-dev/BodyLink/releases/latest) 下载 `BodyLink-Setup-v0.3.0.exe`。
+2. 运行安装器。它会从同一 Release 下载并校验模型包，按需勾选桌面快捷方式；安装器按当前用户安装，不需要管理员权限。
+3. 从开始菜单或桌面启动 BodyLink。
+
+安装包包含 Python、ONNX Runtime 和 CUDA/cuDNN 运行库；约 450 MB 的三个模型作为独立 `BodyLink-Models-v0.3.0.zip` 下载。需要离线安装时，提前下载模型包并放在安装器同一目录，安装器会优先使用本地文件。卸载 BodyLink 时会保留 `%LOCALAPPDATA%\BodyLink\settings.json`。当前安装器没有商业代码签名，Windows SmartScreen 可能在首次运行时显示“未知发布者”；可用 Release 同页的 `SHA256SUMS.txt` 核对两个文件。
+
+### 从源码运行
+
+需要额外安装 Python 3.12：
+
+1. 双击 `install.bat`。它会创建独立的 `.venv`、安装固定版本依赖、下载模型并验证两个 CUDA 推理会话。
 2. 双击 `start.bat` 启动 BodyLink。
 
-安装结束前会分别创建人体检测与姿态模型的 CUDA 会话；只要任一模型没有实际使用 `CUDAExecutionProvider`，安装就会失败，不会静默回退到 CPU。所有视频帧都在本机处理，不会上传。程序只向设置的 UDP 地址发送追踪器坐标。
+只要人体检测或姿态模型没有实际使用 `CUDAExecutionProvider`，源码安装验证就会失败，不会静默回退到 CPU。所有视频帧都在本机处理，不会上传。程序只向设置的 UDP 地址发送追踪器坐标。
 
 ## 使用
 
@@ -64,7 +76,7 @@ BodyLink 是一个面向 Windows 和 VRChat 的本地摄像头全身追踪工具
 
 摄像头读取、图像预处理、后处理、滤波、预览绘制和 OSC 发送仍在 CPU 上执行。可选 MediaPipe 面捕也仍使用 CPU，因为官方 Windows wheel 没有启用 MediaPipe GPU delegate。关闭面捕时不会运行面部模型。
 
-RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；不需要 NVIDIA Maxine SDK、NGC API Key 或 NVIDIA AI Enterprise。安装器从公开模型仓库下载固定文件并校验 SHA-256。摄像头可采集 720p 或 1080p，但 RTMW3D 的单人裁剪输入固定为 384 x 288；更高采集分辨率主要改善远距离人体检测和裁剪质量，不会把模型本身变成 1080p 推理。
+RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；不需要 NVIDIA Maxine SDK、NGC API Key 或 NVIDIA AI Enterprise。Release 模型包和源码安装器都会校验固定模型的 SHA-256。摄像头可采集 720p 或 1080p，但 RTMW3D 的单人裁剪输入固定为 384 x 288；更高采集分辨率主要改善远距离人体检测和裁剪质量，不会把模型本身变成 1080p 推理。可选 TensorRT FP16 后端的约束和验收标准记录在 [ROADMAP.md](ROADMAP.md)，当前版本仍以 CUDA 为唯一全身推理后端。
 
 ## 机位与限制
 
@@ -78,7 +90,7 @@ RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；�
 ## 故障排查
 
 - `无法打开摄像头`：关闭会议软件、浏览器摄像头页面或其他占用摄像头的程序，再重新扫描。
-- `ONNX Runtime CUDA 不可用`：更新 NVIDIA 驱动后重新运行 `install.bat`；不要同时安装 CPU 版 `onnxruntime`。
+- `ONNX Runtime CUDA 不可用`：先更新 NVIDIA 驱动；源码安装再重新运行 `install.bat`，安装包用户则重新安装当前 Release。不要在源码环境中同时安装 CPU 版 `onnxruntime`。
 - `pip check` 报告 `rtmlib` 缺少 `onnxruntime` 或 `opencv-python`：这是发行包名称造成的元数据告警。BodyLink 实际使用 `onnxruntime-gpu` 和 `opencv-contrib-python`；不要为消除告警安装 CPU 版 `onnxruntime`，安装器末尾的 CUDA 会话检查才是运行时验收依据。
 - 姿态置信度低：增加正面照明、换成有对比度的背景、退后让双脚完整入镜。
 - 脚穿地：确认 BodyLink 与 VRChat 中的身高正确，站直后重新执行两边的校准。
@@ -94,6 +106,7 @@ RTMW3D 与 rtmlib 使用 Apache-2.0 许可，ONNX Runtime 使用 MIT 许可；�
 .\.venv\Scripts\python.exe scripts\check_runtime.py
 .\.venv\Scripts\python.exe scripts\check_camera.py
 .\.venv\Scripts\python.exe main.py
+.\scripts\build_release.ps1
 ```
 
 协议依据：
